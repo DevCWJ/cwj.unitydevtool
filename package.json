@@ -1,0 +1,28 @@
+{
+  "name": "com.cwj.unitydevtool",
+  "version": "22.0.0",
+  "displayName": "UnityDevTool",
+  "description": "CWJ's Development Tool for Unity",
+  "unity": "2021.3",
+  "unityRelease": "1f1",
+  "license": "MIT",
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.9",
+    "com.unity.render-pipelines.core": "12.1.15",
+    "com.unity.render-pipelines.universal": "12.1.15",
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask": "2.5.10",
+    "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts": "7.1.0"
+  },
+  "keywords": [
+    "unity",
+    "devtool",
+    "cwj",
+    "unitydevtool"
+  ],
+  "author": {
+    "name": "CWJ",
+    "email": "cwj@kakao.com",
+    "url": ""
+  }
+}
