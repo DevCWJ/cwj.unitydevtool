@@ -1,8 +1,8 @@
 {
   "name": "com.cwj.unitydevtool",
-  "version": "22.0.0",
+  "version": "24.0.0",
   "displayName": "UnityDevTool",
-  "description": "CWJ's Development Tool for Unity",
+  "description": "A comprehensive toolset for Unity developers, enhancing editor capabilities and providing utility functions.",
   "unity": "2021.3",
   "unityRelease": "1f1",
   "license": "MIT",
@@ -11,18 +11,26 @@
     "com.unity.render-pipelines.core": "12.1.15",
     "com.unity.render-pipelines.universal": "12.1.15",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
-    "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask": "2.5.10",
-    "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts": "7.1.0"
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.neuecc.unirx": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts"
   },
   "keywords": [
     "unity",
-    "devtool",
-    "cwj",
-    "unitydevtool"
+    "editor",
+    "tools",
+    "developer",
+    "cwj"
   ],
+  "type": "tool",
   "author": {
     "name": "CWJ",
     "email": "cwj@kakao.com",
-    "url": ""
+    "url": "https://github.com/DevCWJ/unitydevtool"
+  },
+  "samples": [
+    {
+      "displayName": "Prefabs in Samples",
+      "description": "A set of prefabs for Unity Dev Tool.",
+      "path": "Samples~/Prefabs"
+    }
   }
-}
