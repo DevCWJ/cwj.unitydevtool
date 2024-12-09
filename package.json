@@ -1,25 +1,27 @@
 {
   "name": "com.cwj.unitydevtool",
-  "version": "24.0.0",
+  "version": "24.1.0",
   "displayName": "UnityDevTool",
-  "description": "A comprehensive toolset for Unity developers, enhancing editor capabilities and providing utility functions.",
   "unity": "2021.3",
   "unityRelease": "1f1",
+  "description": "A comprehensive toolset for Unity developers, enhancing editor capabilities and providing utility functions.",
   "license": "MIT",
+  "changelogUrl": "https://github.com/DevCWJ/unitydevtool/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/DevCWJ/unitydevtool/blob/main/LICENSE",
   "dependencies": {
     "com.unity.textmeshpro": "3.0.9",
     "com.unity.render-pipelines.core": "12.1.15",
     "com.unity.render-pipelines.universal": "12.1.15",
     "com.unity.nuget.newtonsoft-json": "3.2.1"
   },
+  "hideInEditor": false,
   "keywords": [
-    "unity",
-    "editor",
-    "tools",
+    "Extention",
+    "tool",
     "developer",
     "cwj"
   ],
-  "type": "tool",
+  "category": "CWJ",
   "author": {
     "name": "CWJ",
     "email": "cwj@kakao.com",
