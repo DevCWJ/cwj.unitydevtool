@@ -1,0 +1,24 @@
+{
+    "name": "CWJ.UnityDevTool",
+    "rootNamespace": "CWJ",
+    "references": [
+        "GUID:c90fc4976e45d71448ce376644a69f32",
+        "GUID:a82680356175aa04f8db31213b12f884",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:796e37b916e185c4a9e7e4178ef62fad",
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+        "GUID:8c4dd21966739024fbd72155091d199e",
+        "GUID:a1e85cc1ba1220c47a3b41ae619a5757",
+        "GUID:0f315cf19a80d614a86c123f0da18909"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

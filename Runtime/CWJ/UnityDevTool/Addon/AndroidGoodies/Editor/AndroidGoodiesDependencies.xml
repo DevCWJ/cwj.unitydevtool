@@ -1,0 +1,28 @@
+<dependencies>
+    <androidPackages>
+        <androidPackage spec="androidx.fragment:fragment:1.2.5">
+            <androidSdkPackageIds>
+                <androidSdkPackageId>extra-google-m2repository</androidSdkPackageId>
+            </androidSdkPackageIds>
+            <repositories>
+                <repository>https://maven.google.com</repository>
+            </repositories>
+        </androidPackage>
+        <androidPackage spec="androidx.print:print:1.0.0">
+            <androidSdkPackageIds>
+                <androidSdkPackageId>extra-google-m2repository</androidSdkPackageId>
+            </androidSdkPackageIds>
+            <repositories>
+                <repository>https://maven.google.com</repository>
+            </repositories>
+        </androidPackage>
+        <androidPackage spec="com.google.guava:guava:28.2-android">
+            <androidSdkPackageIds>
+                <androidSdkPackageId>extra-google-m2repository</androidSdkPackageId>
+            </androidSdkPackageIds>
+            <repositories>
+                <repository>https://maven.google.com</repository>
+            </repositories>
+        </androidPackage>
+    </androidPackages>
+</dependencies>
