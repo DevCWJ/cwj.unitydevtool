@@ -44,6 +44,9 @@ CWJ_ProfilingLog.txt.meta
 **/CWJ/**/PsMessage_ScriptableObject.asset
 **/CWJ/**/PsMessage_ScriptableObject.asset.meta
 
+.idea/
+*.iml
+out/
 
 ### Visual Studio / MonoDevelop generated ###
 .gradle/
