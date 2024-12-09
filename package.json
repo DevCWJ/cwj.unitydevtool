@@ -1,7 +1,7 @@
 {
   "name": "com.cwj.unitydevtool",
   "version": "24.1.0",
-  "displayName": "UnityDevTool",
+  "displayName": "CWJ.UnityDevTool",
   "unity": "2021.3",
   "description": "A comprehensive toolset for Unity developers, enhancing editor capabilities and providing utility functions.",
   "license": "MIT",
@@ -24,7 +24,7 @@
   "author": {
     "name": "CWJ",
     "email": "cwj@kakao.com",
-    "url": "https://github.com/DevCWJ/unitydevtool"
+    "url": "https://github.com/DevCWJ/cwj.unitydevtool"
   },
   "samples": [
     {
