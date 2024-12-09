@@ -42,7 +42,7 @@ namespace CWJ
 
         public static string HtmlColor(this bool target, bool force = false)
         {
-            return target.ToString().Html(target ? UnityEngine.HexColor.DarkGreenX : HexColor.DarkRed, force);
+            return target.ToString().Html(target ? CWJ.HexColor.DarkGreenX : HexColor.DarkRed, force);
         }
         public static long GetTimeStamp()
         {

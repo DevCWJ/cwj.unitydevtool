@@ -74,12 +74,12 @@ namespace CWJ
 }
 
 
-namespace UnityEngine
+namespace CWJ
 {
 	/// <summary>
 	/// Hexadecimal color (RGBA hexadecimal string of length 8)
 	/// <see cref="ColorUtility.TryParseHtmlString(string, out Color)"/>
-	/// <para></para>todo 支持HDR
+	/// <para></para>
 	/// </summary>
 	[System.Serializable]
 	public partial struct HexColor
