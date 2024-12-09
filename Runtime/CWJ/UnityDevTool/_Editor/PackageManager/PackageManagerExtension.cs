@@ -29,7 +29,7 @@ namespace CWJ
 				VisualElement label = new VisualElement();
 				ExtentionRoot.Add(label);
 				detail = new Label();
-				detail.text = "test";
+				detail.text = "CWJ";
 				label.Add(detail);
 
 
@@ -175,7 +175,6 @@ namespace CWJ
 
 				if (current != null)
 				{
-					Debug.LogError("OnPackageSelectionChange " + packageInfo.displayName);
 					// Debug.Log(current.displayName + "    " + StringUtil.ToStringReflection(current));
 				}
 
@@ -186,12 +185,12 @@ namespace CWJ
 
 			public void OnPackageAddedOrUpdated(PackageInfo packageInfo)
 			{
-				Debug.LogError("OnPackageAddedOrUpdated " + packageInfo.displayName);
+				Debug.Log("Package AddedOrUpdated: " + packageInfo.displayName);
 			}
 
 			public void OnPackageRemoved(PackageInfo packageInfo)
 			{
-				Debug.LogError("OnPackageRemoved " + packageInfo.displayName);
+				Debug.Log("Package Removed: " + packageInfo.displayName);
 			}
 		}
 	}
