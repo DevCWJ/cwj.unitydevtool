@@ -1,6 +1,6 @@
 {
   "name": "com.cwj.unitydevtool",
-  "version": "24.1.0",
+  "version": "24.1.1",
   "displayName": "CWJ.UnityDevTool",
   "unity": "2021.3",
   "description": "A comprehensive toolset for Unity developers, enhancing editor capabilities and providing utility functions.",
