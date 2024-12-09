@@ -230,7 +230,8 @@ namespace CWJ.AccessibleEditor
             {
                 if (!IsValidBuildTargetGroup(group)) continue;
 
-                var defineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(group).Split(';').Select(d => d.Trim()).ToHashSet();
+                var lastDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(group).Split(';');
+                var defineSymbols = lastDefineSymbols.Where(s => !string.IsNullOrWhiteSpace(s)).Select(d => d.Trim()).ToHashSet();
 
                 string[] removes = removeSymbolList.Where((s) => defineSymbols.Remove(s)).ToArray();
                 bool changed = removes.Length > 0;
@@ -238,12 +239,19 @@ namespace CWJ.AccessibleEditor
                 string[] adds = addSymbolList.Where((s) => defineSymbols.Add(s)).ToArray();
                 changed |= adds.Length > 0;
 
+                var setDefineSymbols = defineSymbols.ToArray();
+
+                if (setDefineSymbols.Length == lastDefineSymbols.Length && ArrayUtil.ArrayEquals(setDefineSymbols, lastDefineSymbols))
+                {
+                    continue;
+                }
+
                 if (changed)
                 {
                     if (!isChanged) isChanged = true;
                     try
                     {
-                        PlayerSettings.SetScriptingDefineSymbolsForGroup(group, string.Join(";", defineSymbols.ToArray()));
+                        PlayerSettings.SetScriptingDefineSymbolsForGroup(group, string.Join(";", setDefineSymbols));
                     }
                     catch (System.Exception)
                     {

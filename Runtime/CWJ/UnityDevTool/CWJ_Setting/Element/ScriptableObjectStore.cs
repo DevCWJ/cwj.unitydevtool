@@ -34,6 +34,7 @@ namespace CWJ.AccessibleEditor
                         if (!_ReserveCreate)
                         {
                             _ReserveCreate = true;
+                            EditorApplication.update -= CreateMySelf;
                             EditorApplication.update += CreateMySelf;
                         }
                         return null;
@@ -50,7 +51,6 @@ namespace CWJ.AccessibleEditor
         static void CreateMySelf()
         {
             EditorApplication.update -= CreateMySelf;
-            _ReserveCreate = false;
             string path = CacheFilePath<ScriptableObjectStore>();
             _Instance = AssetDatabase.LoadAssetAtPath<ScriptableObjectStore>(path);
             if (!_Instance)

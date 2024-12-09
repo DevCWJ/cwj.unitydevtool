@@ -341,6 +341,7 @@ namespace CWJ.AccessibleEditor
             UnityProjectChangedEvent?.Invoke();
             DefineSymbolUtil.InvokeRegistStackList();
         }
+        
 
         public static void OnUnityDevToolDelete()
         {
