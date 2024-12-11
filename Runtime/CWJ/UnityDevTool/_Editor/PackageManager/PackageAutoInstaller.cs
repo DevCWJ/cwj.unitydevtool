@@ -1,4 +1,5 @@
 // #if UNITY_EDITOR && !CWJ_SCENEENUM_ENABLED && !CWJ_SCENEENUM_DISABLED
+// using System.IO;
 // using System.Linq;
 // using System.Reflection;
 // using UnityEditor;
@@ -9,12 +10,15 @@
 // using UnityEngine.UIElements;
 // using Debug = UnityEngine.Debug;
 // using PackageInfo = UnityEditor.PackageManager.PackageInfo;
+// using System.Diagnostics;
+// using System;
 //
 // namespace CWJ.Installer
 // {
 // 	public static class PackageAutoInstaller
 // 	{
 // 		private const string CWJ_Installer_Name = "com.cwj.installer";
+// 		private const string GitRepoUrl = "https://github.com/DevCWJ/cwj.installer.git";
 //
 // 		private static readonly string[] InstallGitUrls = new string[]
 // 		                                                  {
@@ -23,9 +27,10 @@
 // 			                                                  UnityDevToolUrl
 // 		                                                  };
 //
-// 		private const string UniRxUrl = "com.neuecc.unirx@https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts";
-// 		private const string UniTaskUrl = "com.cysharp.unitask@https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask";
-// 		private const string UnityDevToolUrl = "com.cwj.unitydevtool@https://github.com/DevCWJ/cwj.unitydevtool.git";
+// 		private const string UniRxUrl = "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts"; //com.neuecc.unirx
+// 		private const string UniTaskUrl = "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask"; //com.cysharp.unitask
+// 		private const string UnityDevToolUrl = "https://github.com/DevCWJ/cwj.unitydevtool.git"; //com.cwj.unitydevtool
+// 		private const string descStr = "[CWJ 라이브러리 Installer]";
 //
 // 		[InitializeOnLoadMethod]
 // 		static void Init()
@@ -38,26 +43,43 @@
 // 			public VisualElement CreateExtensionUI()
 // 			{
 // 				VisualElement ExtentionRoot = new VisualElement();
-// 				VisualElement label = new VisualElement();
-// 				ExtentionRoot.Add(label);
-// 				detail = new Label();
-// 				detail.text = "cwj";
-// 				label.Add(detail);
+// 				VisualElement labelLine = new VisualElement();
+// 				ExtentionRoot.Add(labelLine);
+// 				descLbl = new Label();
+// 				descLbl.text = "cwj";
+// 				labelLine.Add(descLbl);
 //
 //
-// 				VisualElement buttons = new VisualElement();
-// 				ExtentionRoot.Add(buttons);
+// 				VisualElement buttonLine1 = new VisualElement();
+// 				ExtentionRoot.Add(buttonLine1);
 //
-// 				buttons.style.flexDirection = FlexDirection.Row;
-// 				buttons.style.flexWrap = Wrap.Wrap;
+// 				buttonLine1.style.flexDirection = FlexDirection.Row;
+// 				buttonLine1.style.flexWrap = Wrap.Wrap;
 //
 // 				const int width = 160;
+//
+// 				changeApiCompatibilityBtn = new Button();
+// 				changeApiCompatibilityBtn.text = "Change API Compatibility";
+// 				changeApiCompatibilityBtn.clicked += ChangeApiCompatibility;
+// 				changeApiCompatibilityBtn.style.width = width;
+// 				buttonLine1.Add(changeApiCompatibilityBtn);
+//
+// 				installBtn = new Button();
+// 				installBtn.text = "Install Packages";
+// 				installBtn.clicked += OnClickInstallBtn;
+// 				installBtn.style.width = width;
+// 				buttonLine1.Add(installBtn);
+//
+// 				VisualElement buttonsLine2 = new VisualElement();
+// 				ExtentionRoot.Add(buttonsLine2);
+// 				buttonsLine2.style.flexDirection = FlexDirection.Row;
+// 				buttonsLine2.style.flexWrap = Wrap.Wrap;
 //
 // 				opengit = new Button();
 // 				opengit.text = "Open Git Link";
 // 				opengit.clicked += Opengit_clicked;
 // 				opengit.style.width = width;
-// 				buttons.Add(opengit);
+// 				buttonsLine2.Add(opengit);
 // 				return ExtentionRoot;
 // 			}
 //
@@ -75,80 +97,199 @@
 //
 // 			public PackageInfo current = null;
 // 			private Button openFolder;
-// 			private Button opengit;
-// 			private Label detail;
+// 			private Button opengit, changeApiCompatibilityBtn, installBtn;
+// 			private Label descLbl;
 //
 // 			public void OnPackageSelectionChange(PackageInfo packageInfo)
 // 			{
+// 				bool canEnabled = !EditorApplication.isPlayingOrWillChangePlaymode && !EditorApplication.isCompiling && !IsInstalling;
 // 				current = packageInfo;
-// 				bool isGit = current?.source == PackageSource.Git;
+// 				opengit.visible = current?.source == PackageSource.Git;
 //
-// 				detail.text = $"[Git : {isGit}]";
+// 				bool isTargetPackage = current != null && current.name == CWJ_Installer_Name;
+// 				descLbl.visible = isTargetPackage;
+// 				installBtn.visible = isTargetPackage;
+// 				changeApiCompatibilityBtn.visible = isTargetPackage;
 //
-// 				if (current != null)
+// 				if (!isTargetPackage)
 // 				{
-// 					if (current.name == CWJ_Installer_Name || InstallGitUrls.Contains(current.packageId))
-// 					{
-// 						EditorApplication.update += InstallPackages;
-// 					}
+// 					return;
 // 				}
 //
-// 				opengit.SetEnabled(isGit);
+// 				bool needChangeApi = PlayerSettings.GetApiCompatibilityLevel(EditorUserBuildSettings.selectedBuildTargetGroup) !=
+// 				                     ApiCompatibilityLevel.NET_Unity_4_8;
+//
+// 				changeApiCompatibilityBtn.SetEnabled(canEnabled && needChangeApi);
+// 				installBtn.SetEnabled(canEnabled && !needChangeApi);
+//
+// 				if (needChangeApi)
+// 					descLbl.text = $"[{changeApiCompatibilityBtn.text}] 버튼을 눌러주세요.";
+// 				else
+// 					CheckForUpdates();
 // 			}
 //
-// 			public void OnPackageAddedOrUpdated(PackageInfo packageInfo)
+// 			void OnClickInstallBtn()
 // 			{
+// 				if (IsInstalling) return;
+//
+// 				EditorApplication.update -= InstallPackagesLooper;
+// 				curInstallIndex = 0;
+// 				curAddRequest = null;
+// 				EditorApplication.update += InstallPackagesLooper;
+//
+// 				InstallPackagesLooper();
 // 			}
 //
-// 			public void OnPackageRemoved(PackageInfo packageInfo)
+// 			private void CheckForUpdates()
 // 			{
+// 				bool needUpdate = current.CheckNeedUpdateByLastUpdateDate(out string latestVersion);
+// 				installBtn.SetEnabled(string.IsNullOrEmpty(latestVersion) || !needUpdate);
+// 				descLbl.text = $"{descStr}\n" + (needUpdate ? "Update가 필요합니다." : "현재 최신 버전입니다.");
 // 			}
+//
+// 			public void OnPackageAddedOrUpdated(PackageInfo packageInfo) { }
+//
+// 			public void OnPackageRemoved(PackageInfo packageInfo) { }
 // 		}
 //
 //
-// 		private static AddRequest currentRequest;
-// 		private static int currentIndex;
+// 		private static AddRequest curAddRequest;
+// 		private static int curInstallIndex = -1;
 //
-// 		//TODO : 이미 설치된것은 설치하려하면안됨.
-// 		private static void InstallPackages()
+// 		private static bool IsInstalling => curInstallIndex >= 0 || curAddRequest != null;
+//
+// 		private static void InstallPackagesLooper()
 // 		{
-// 			// Unity 에디터가 실행 중일 때만 동작
 // 			if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling)
-// 				return;
-//
-// 			// 설치 요청이 없으면 새 요청 시작
-// 			if (currentRequest == null && currentIndex < InstallGitUrls.Length)
 // 			{
-// 				Debug.Log($"Installing package: {InstallGitUrls[currentIndex]}");
-// 				currentRequest = Client.Add(InstallGitUrls[currentIndex]);
+// 				Debug.LogError("Cannot install packages while in play mode or compiling.");
+// 				return;
 // 			}
 //
-// 			// 요청 상태 확인
-// 			if (currentRequest != null && currentRequest.IsCompleted)
+// 			if (curAddRequest == null && curInstallIndex < InstallGitUrls.Length)
 // 			{
-// 				if (currentRequest.Status == StatusCode.Success)
+// 				var url = InstallGitUrls[curInstallIndex];
+// 				if (!IsPackageInstalled(url))
 // 				{
-// 					Debug.Log($"Successfully installed: {InstallGitUrls[currentIndex]}");
+// 					curAddRequest = Client.Add(url);
 // 				}
-// 				else if (currentRequest.Status >= StatusCode.Failure)
+// 				else
 // 				{
-// 					Debug.LogError($"Failed to install: {InstallGitUrls[currentIndex]} - {currentRequest.Error.message}");
+// 					Debug.Log($"Package already installed: {url}");
+// 					curAddRequest = null;
+// 					++curInstallIndex;
+// 				}
+// 			}
+//
+// 			if (curAddRequest != null && curAddRequest.IsCompleted)
+// 			{
+// 				if (curAddRequest.Status == StatusCode.Success)
+// 				{
+// 					Debug.Log($"Successfully installed: {InstallGitUrls[curInstallIndex]}");
+// 				}
+// 				else if (curAddRequest.Status >= StatusCode.Failure)
+// 				{
+// 					Debug.LogError($"Failed to install: {InstallGitUrls[curInstallIndex]} - {curAddRequest.Error.message}");
 // 				}
 //
 // 				// 다음 패키지로 이동
-// 				currentRequest = null;
-// 				currentIndex++;
+// 				curAddRequest = null;
+// 				++curInstallIndex;
 // 			}
 //
-// 			// 모든 패키지 설치 완료 시 업데이트 종료
-// 			if (currentIndex >= InstallGitUrls.Length)
+// 			if (curInstallIndex >= InstallGitUrls.Length)
 // 			{
 // 				Debug.Log("All packages installed.");
-// 				EditorApplication.update -= InstallPackages;
+// 				EditorApplication.update -= InstallPackagesLooper;
+// 				curAddRequest = null;
+// 				curInstallIndex = -1;
 // 			}
+// 		}
+//
+// 		private static bool CheckNeedUpdateByLastUpdateDate(this PackageInfo packageInfo, out string latestVersion)
+// 		{
+// 			latestVersion = GetLatestGitTag();
+//
+// 			if (string.IsNullOrEmpty(latestVersion))
+// 			{
+// 				return true;
+// 			}
+//
+// 			latestVersion = latestVersion.VersionNormalized()[1..];
+// 			string currentVersion = packageInfo.version.VersionNormalized();
+// 			return !string.IsNullOrEmpty(latestVersion) && currentVersion != latestVersion;
+// 		}
+//
+// 		private static string VersionNormalized(this string input)
+// 		{
+// 			return input
+// 			       .Trim()
+// 			       .Replace("\n", "") // 줄바꿈 제거
+// 			       .Replace("\r", "") // 캐리지 리턴 제거
+// 			       .Replace("\t", ""); // 탭 제거
+// 		}
+//
+// 		private static string GetLatestGitTag()
+// 		{
+// 			try
+// 			{
+// 				// Git 명령 실행
+// 				ProcessStartInfo startInfo = new ProcessStartInfo
+// 				                             {
+// 					                             FileName = "git",
+// 					                             Arguments = $"ls-remote --tags {GitRepoUrl}",
+// 					                             RedirectStandardOutput = true,
+// 					                             UseShellExecute = false,
+// 					                             CreateNoWindow = true
+// 				                             };
+//
+// 				using Process process = Process.Start(startInfo);
+// 				string output = process.StandardOutput.ReadToEnd();
+// 				process.WaitForExit();
+//
+// 				// Git 태그 목록에서 최신 태그를 추출
+// 				string[] lines = output.Split('\n');
+// 				string latestTag = lines
+// 				                   .Where(line => line.Contains("refs/tags/"))
+// 				                   .Select(line => line.Split('/').Last())
+// 				                   .OrderByDescending(tag => tag)
+// 				                   .FirstOrDefault();
+//
+// 				return latestTag;
+// 			}
+// 			catch (System.Exception ex)
+// 			{
+// 				Debug.LogError("Git 태그를 가져오는 중 오류 발생: " + ex.Message);
+// 				return null;
+// 			}
+// 		}
+//
+// 		private static void ChangeApiCompatibility()
+// 		{
+// 			BuildTargetGroup targetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+// 			PlayerSettings.SetApiCompatibilityLevel(targetGroup, ApiCompatibilityLevel.NET_Unity_4_8);
+//
+// 			Debug.Log($"API Compatibility Level changed to: {ApiCompatibilityLevel.NET_Unity_4_8.ToString()} (.NET Framework)");
+// 		}
+//
+// 		private static bool IsPackageInstalled(string packageUrl)
+// 		{
+// 			var listRequest = Client.List();
+// 			while (!listRequest.IsCompleted) { }
+//
+// 			if (listRequest.Status == StatusCode.Success)
+// 			{
+// 				foreach (var package in listRequest.Result)
+// 				{
+// 					if (package.packageId.Contains(packageUrl))
+// 						return true;
+// 				}
+// 			}
+//
+// 			return false;
 // 		}
 // 	}
 // }
 //
 // #endif
-
+//

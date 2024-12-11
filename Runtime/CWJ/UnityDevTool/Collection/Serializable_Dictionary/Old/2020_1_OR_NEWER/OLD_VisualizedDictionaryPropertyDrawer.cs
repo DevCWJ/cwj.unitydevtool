@@ -103,7 +103,8 @@ namespace CWJ.Collection
 
 						if (icon != null)
 						{
-							iconRect.size = s_buttonStyle.CalcSize(icon);
+							var singleLineHeight = EditorGUIUtility.singleLineHeight;
+							iconRect.size = new Vector2(singleLineHeight, singleLineHeight);
 							GUI.Label(iconRect, icon);
 						}
 					};
